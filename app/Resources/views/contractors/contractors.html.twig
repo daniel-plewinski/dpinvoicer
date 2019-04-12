@@ -46,6 +46,7 @@
                     <h4 class="modal-title"></h4>
                 </div>
                 <div class="modal-body">
+                <div id="message"></div>
                     <form>
                         <div class="form-group">
                             <label for="contractorName">Nazwa kontrahenta</label>
@@ -59,9 +60,10 @@
                             <label for="contractorAddress">Adres</label>
                             <input type="text" class="form-control" id="contractorAddress" placeholder="">
                         </div>
+                         <input type="hidden" class="form-control" id="contractorId" value="">
                         <div class="modal-footer">
-                            <button type="button"  type="submit" class="btn btn-info">Zapisz</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                            <button type="button" id="submit" onclick="Contractors.submit()" class="btn btn-info">Zapisz</button>
+                            <button type="button" id="close" class="btn btn-default" data-dismiss="modal">Zamknij</button>
                         </div>
                     </form>
             </div>

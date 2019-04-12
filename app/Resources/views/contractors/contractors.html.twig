@@ -9,6 +9,8 @@
 
     <div style="height: 30px;"></div>
 
+        <div id="mainMessage"></div>
+
     <div class="list-group">
 
         {% for element in pagination %}
@@ -22,7 +24,7 @@
                     <button type="button" class="btn btn-warning" data-toggle="modal"
                             onclick="Contractors.getContractor( {{ element.id }}, Contractors.setModalTitle('editContractor') )" data-target="#editContractor">Edytuj
                     </button>
-                    <button type="button" class="btn btn-danger">Usuń</button>
+                    <button type="button" class="btn btn-danger" onclick="Contractors.deleteContractor({{ element.id }})">Usuń</button>
                 </div>
             </div>
         </a>

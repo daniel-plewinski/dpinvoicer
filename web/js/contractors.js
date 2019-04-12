@@ -77,6 +77,33 @@ var Contractors = {
         });
     },
 
+    deleteContractor: function(id) {
+
+        $.ajax({
+            url: 'delete/' + id,
+            type: 'DELETE',
+            error: function () {
+                $('#mainMessage').append(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Błąd!</strong> Nie udało się usunąć kontrahenta
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>`);
+            },
+            success: function () {
+
+                $('#mainMessage').append(`<div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <strong>Sukces!</strong> Kontrahent został usunięty
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>`);
+                setTimeout(function(){  window.location.reload(); }, 2000);
+
+            },
+        });
+    },
+
     addContractor:  function() {
 
         var formData = {

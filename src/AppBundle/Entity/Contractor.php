@@ -42,7 +42,7 @@ class Contractor
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=1, nullable=true)
+     * @ORM\Column(name="status__", type="string", length=1, nullable=true)
      */
     private $status;
 

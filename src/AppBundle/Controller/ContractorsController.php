@@ -20,7 +20,7 @@ class ContractorsController extends Controller
     public function index(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $contractors = $em->getRepository('AppBundle:Contractor')->findAll();
+        $contractors = $em->getRepository('AppBundle:Contractor')->findAllContractors();
 
         $paginator = $this->get('knp_paginator');
 
@@ -44,7 +44,7 @@ class ContractorsController extends Controller
 
         try {
 
-            $contractor = $em->getRepository('AppBundle:Contractor')->find($id);
+            $contractor = $em->getRepository('AppBundle:Contractor')->findOneContractor($id)[0];
 
             if (!$contractor) {
 
@@ -147,6 +147,48 @@ class ContractorsController extends Controller
                 'code'    => $exception->getCode(),
                 'message' => $exception->getMessage(),
             ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @Route("/contractors/delete/{id}", name="deleteContractor")
+     * @Method("DELETE")
+     * @return JsonResponse
+     */
+    public function deleteContractor($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        try {
+
+            $contractor = $em->getRepository('AppBundle:Contractor')->find($id);
+
+            if (!$contractor) {
+
+                return new JsonResponse([ 'success' => false,]);
+
+            } else {
+
+                 $contractor->setStatus('D');
+
+                $em->persist($contractor);
+                $em->flush();
+
+                return new JsonResponse([
+                    'success' => true,
+                ]);
+            }
+
+        } catch (Exception $exception) {
+
+            return new JsonResponse(
+                [
+                    'success' => false,
+                    'code' => $exception->getCode(),
+                    'message' => $exception->getMessage(),
+                ]
+            );
         }
     }
 }

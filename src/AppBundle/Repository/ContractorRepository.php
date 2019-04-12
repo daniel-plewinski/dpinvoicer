@@ -10,4 +10,24 @@ namespace AppBundle\Repository;
  */
 class ContractorRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findAllContractors()
+    {
+        return $this->createQueryBuilder('con')
+            ->where("con.status <> :status OR con.status IS NULL")
+            ->setParameter('status', 'D')
+            ->getQuery()
+            ->getResult();
+
+    }
+
+    public function findOneContractor($id)
+    {
+        return $this->createQueryBuilder('con')
+            ->where('con.id = :contractorId')
+            ->andWhere("con.status <> :status OR con.status IS NULL")
+            ->setParameters(array('contractorId' => $id, 'status' => 'D'))
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
 }

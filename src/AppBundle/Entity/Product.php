@@ -35,7 +35,7 @@ class Product
 
 
     /**
-     * @ORM\Column(type="smallint", length=2)
+     * @ORM\Column(type="text", length=2)
      */
     private $vatPerCent;
 

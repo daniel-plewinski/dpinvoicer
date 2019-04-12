@@ -94,6 +94,59 @@ class ContractorsController extends Controller
         $em->persist($contractor);
         $em->flush();
 
-        return new Response('It\'s probably been saved', 201);
+        return new Response('OK', 201);
+    }
+
+
+    /**
+     * @Route("/contractors/update/{id}", name="updateContractor")
+     * @Method("PATCH")
+     */
+    public function updateContractor(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        try {
+
+            $contractor = $em->getRepository('AppBundle:Contractor')->find($id);
+
+            if (!$contractor) {
+
+                return new JsonResponse([ 'success' => false,]);
+
+            } else {
+
+                $name = $request->get('name');
+                $nip = $request->get('nip');
+                $address = $request->get('address');
+
+                if ($name) {
+                    $contractor->setName($name);
+                }
+
+                if ($nip) {
+                    $contractor->setNip($nip);
+                }
+
+                if ($address) {
+                    $contractor->setAddress($address);
+                }
+
+                $em->persist($contractor);
+                $em->flush();
+            }
+
+            return new JsonResponse([
+                'success' => true,
+            ]);
+
+        } catch (Exception $exception) {
+
+            return new JsonResponse([
+                'success' => false,
+                'code'    => $exception->getCode(),
+                'message' => $exception->getMessage(),
+            ]);
+        }
     }
 }

@@ -32,27 +32,27 @@ var Contractors = {
 
     submit() {
 
-        id = $('#contractorId');
-        id = parseInt(id);
+        id = $('#contractorId').val();
 
-        if (id !== 'undefined') {
+        if (id === "") {
             this.addContractor()
         } else {
+            id = parseInt(id);
             this.updateContractor(id)
         }
     },
 
-    updateContractor: function() {
+    updateContractor: function(id) {
 
         var formData = {
-            'id': $('#contractorId'),
+            'id': id,
             'name': $('#contractorName').val(),
             'nip': $('#contractorNip').val(),
             'address': $('#contractorAddress').val(),
         };
 
         $.ajax({
-            url: 'new',
+            url: 'update/' + id,
             data: formData,
             type: 'PATCH',
             error: function () {
@@ -71,7 +71,8 @@ var Contractors = {
                   <span aria-hidden="true">&times;</span>
                   </button>
                   </div>`);
-                this.formClear();
+                setTimeout(function(){  window.location.reload(); }, 2000);
+
             },
         });
     },
@@ -104,7 +105,7 @@ var Contractors = {
                   <span aria-hidden="true">&times;</span>
                   </button>
                   </div>`);
-                this.formClear();
+                window.location.reload();
             },
         });
     },
@@ -122,5 +123,5 @@ $("#submit").click(function(event) {
 });
 
 $("#close").click(function(event) {
-
+    window.location.reload();
 });

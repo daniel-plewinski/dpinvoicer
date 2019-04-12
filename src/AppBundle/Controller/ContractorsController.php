@@ -2,12 +2,14 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Contractor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class ContractorsController extends Controller
@@ -71,5 +73,27 @@ class ContractorsController extends Controller
                 'message' => $exception->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * @Route("/contractors/new", name="newContractor")
+     * @Method("POST")
+     */
+    public function newContractor(Request $request)
+    {
+        $name = $request->get('name');
+        $nip = $request->get('nip');
+        $address = $request->get('address');
+
+        $contractor = new Contractor();
+        $contractor->setName($name);
+        $contractor->setNip($nip);
+        $contractor->setAddress($address);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($contractor);
+        $em->flush();
+
+        return new Response('It\'s probably been saved', 201);
     }
 }

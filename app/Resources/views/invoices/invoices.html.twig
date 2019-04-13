@@ -1,0 +1,159 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div style="height: 30px;"></div>
+
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#newInvoice">Nowa faktura</button>
+
+<div style="height: 30px;"></div>
+
+<div id="mainMessage"></div>
+
+<div class="list-group">
+
+   {% for element in pagination %}
+
+      <a href="#" class="list-group-item list-group-item-action">
+         <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">FV nr: {{ element.number }}</h5>
+            <p class="mb-1">Kontrahent: {{ element.contractor.name }}</p>
+            <p class="mb-1">Razem netto: {{ element.totalNet }}</p>
+            <p class="mb-1">Razem brutto: {{ element.totalGross }}</p>
+            <div>
+               <button type="button" class="btn btn-info" data-toggle="modal"
+                       onclick="Invoices.getInvoice( {{ element.id }})" data-target="#showInvoice">Pokaż
+               </button>
+               <button type="button" class="btn btn-danger" onclick="Invoices.deleteInvoice({{ element.id }})">Usuń</button>
+            </div>
+         </div>
+      </a>
+
+   {% endfor %}
+</div>
+{# display navigation #}
+<div class="navigation">
+   <div class="text-center">
+      {{ knp_pagination_render(pagination) }}
+   </div>
+</div>
+
+   <!-- Modal for invoice adding -->
+   <div class="modal fade" id="newInvoice" role="dialog">
+      <div class="modal-dialog widerModal">
+
+         <!-- Modal content-->
+         <div class="modal-content">
+            <div class="modal-header">
+               <h4 class="modal-title">Nowa faktura</h4>
+            </div>
+            <div class="modal-body">
+               <div id="message"></div>
+               <form>
+                  <div class="form-group">
+                     <label for="invoiceName">Wybierz kontrahenta</label>
+                     <select class="form-control" id="invoiceName">
+                        {% for contractor in contractors %}
+                           <option value="{{ contractor.id }}">{{ contractor.name }}</option>
+                        {% endfor %}
+                     </select>
+                  </div>
+                  <div class="form-group">
+                     <label for="invoiceDueByDate">Termin płatności</label>
+                     <input type="date" class="form-control" id="invoiceDueByDate" placeholder="">
+                  </div>
+                  <div style="margin-bottom: 40px;"></div>
+                  <div class="form-group">
+                     <label for="invoiceAddress">Dodaj produkt</label>
+                     <select class="form-control" id="invoiceName">
+                        {% for product in products %}
+                           <option value="{{ product.id }}">{{ product.name }}</option>
+                        {% endfor %}
+                     </select>
+                  </div>
+                  <div class="form-group">
+                     <label for="productQuantity1">Liczba sztuk</label>
+                     <input type="number" class="form-control" id="productQuantity1" placeholder="">
+                  </div>
+                  <div style="margin-bottom: 30px;"></div>
+                  <div class="form-group">
+                     <label for="invoiceAddress">Dodaj produkt</label>
+                     <select class="form-control" id="invoiceName">
+                        {% for product in products %}
+                           <option value="{{ product.id }}">{{ product.name }}</option>
+                        {% endfor %}
+                     </select>
+                  </div>
+                  <div class="form-group">
+                     <label for="productQuantity2">Liczba sztuk</label>
+                     <input type="number" class="form-control" id="productQuantity2" placeholder="">
+                  </div>
+                  <input type="hidden" class="form-control" id="invoiceId" value="">
+                  <div class="modal-footer">
+                     <button type="button" id="submit" onclick="Invoices.submit()" class="btn btn-info">Zapisz</button>
+                     <button type="button" id="close" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Modal for invoice detail -->
+   <div class="modal fade" id="showInvoice" role="dialog">
+      <div class="modal-dialog widerModal">
+
+         <!-- Modal content-->
+         <div class="modal-content">
+            <div class="modal-header">
+               <h4 class="modal-title">Szczegóły faktury nr <span id="numberShow"></span></h4>
+            </div>
+            <div class="modal-body">
+               <p><em>Odbiorca:</em></p>
+               <p id="contractorNameShow"></p>
+               <p id="contractorAddressShow"></p>
+               <hr>
+               <p>Data Wystawienia: <span id="issueDateShow"></span></p>
+               <p>Termin płatności: <span id="dueByDateShow"></span></p>
+                <hr>
+               Pozycje:
+
+               <table class="table table-striped">
+                  <thead>
+                  <tr>
+                     <th scope="col">Nazwa produktu lub usługi</th>
+                     <th scope="col">Liczba sztuk</th>
+                     <th scope="col">Cena netto</th>
+                     <th scope="col">% VAT</th>
+                     <th scope="col">Razem brutto</th>
+                  </tr>
+                  </thead>
+                  <tbody id="productList">
+                  </tbody>
+               </table>
+
+               <hr>
+               <p>Razem netto: <span id="totalNetShow"></span></p>
+               <hr>
+               <p><strong>Razem brutto: <span id="totalGrossShow"></span></strong></p>
+                  <input type="hidden" class="form-control" id="invoiceId" value="">
+                  <div class="modal-footer">
+                     <button type="button" id="submit" onclick="alert('Funkcjonalność nie jest jeszcze dostępna')" class="btn btn-info">PDF</button>
+                     <button type="button" id="close" onclick="window.location.reload()" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                  </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   {% endblock %}
+
+   {% block stylesheets %}
+
+   {% endblock %}
+
+   {% block javascripts %}
+      {{ parent() }}
+      <script src="{{ asset('js/invoices.js') }}"></script>
+
+   {% endblock %}

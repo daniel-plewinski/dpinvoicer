@@ -1,3 +1,9 @@
 .red-text {
     color: #AA3333;
 }
+
+@media (min-width: 992px) {
+    .modal-dialog.widerModal {
+        max-width: 60%;
+    }
+}

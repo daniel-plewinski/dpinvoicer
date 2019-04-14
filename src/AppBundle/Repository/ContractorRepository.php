@@ -26,7 +26,6 @@ class ContractorRepository extends \Doctrine\ORM\EntityRepository
             ->where('con.id = :contractorId')
             ->andWhere("con.status <> :status OR con.status IS NULL")
             ->setParameters(array('contractorId' => $id, 'status' => 'D'))
-            ->setMaxResults(1)
             ->getQuery()
             ->getResult();
     }

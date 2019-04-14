@@ -6,12 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Product
+ * ProductToInvoice
  *
- * @ORM\Table(name="product")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ProductRepository")
+ * @ORM\Table(name="product_to_invoice")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\productToInvoiceRepository")
  */
-class Product
+class ProductToInvoice
 {
     /**
      * @var int
@@ -23,28 +23,33 @@ class Product
     private $id;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=100)
+     * @var Invoice
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Invoice", inversedBy="productToInvoice")
+     * @ORM\JoinColumn(name="invoice", referencedColumnName="id")
+     *
      */
-    private $name;
+    private $invoice;
 
     /**
-     * @ORM\Column(type="decimal", precision=25, scale=2)
+     * @var Product
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product")
+     * @ORM\JoinColumn(name="product", referencedColumnName="id")
      */
-    private $netPrice = 0;
-
+    private $product;
 
     /**
-     * @ORM\Column(type="text", length=2)
+     * @var integer
+     * @ORM\Column(type="bigint")
      */
-    private $vatPerCent;
+    private $quantity;
 
     /**
      * @var string
      * @ORM\Column(name="status__", type="string", length=1, nullable=true)
      */
     private $status;
-
 
     /**
      * @Gedmo\Timestampable(on="create")
@@ -58,8 +63,6 @@ class Product
      */
     private $updatedAt;
 
-
-
     /**
      * Get id
      *
@@ -71,51 +74,51 @@ class Product
     }
 
     /**
-     * @return string
+     * @return Invoice
      */
-    public function getName()
+    public function getInvoice()
     {
-        return $this->name;
+        return $this->invoice;
     }
 
     /**
-     * @param string $name
+     * @param Invoice $invoice
      */
-    public function setName($name)
+    public function setInvoice($invoice)
     {
-        $this->name = $name;
+        $this->invoice = $invoice;
     }
 
     /**
-     * @return mixed
+     * @return Product
      */
-    public function getNetPrice()
+    public function getProduct()
     {
-        return $this->netPrice;
+        return $this->product;
     }
 
     /**
-     * @param mixed $netPrice
+     * @param Product $product
      */
-    public function setNetPrice($netPrice)
+    public function setProduct($product)
     {
-        $this->netPrice = $netPrice;
+        $this->product = $product;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getVatPerCent()
+    public function getQuantity()
     {
-        return $this->vatPerCent;
+        return $this->quantity;
     }
 
     /**
-     * @param mixed $vatPerCent
+     * @param int $quantity
      */
-    public function setVatPerCent($vatPerCent)
+    public function setQuantity($quantity)
     {
-        $this->vatPerCent = $vatPerCent;
+        $this->quantity = $quantity;
     }
 
     /**
@@ -149,6 +152,5 @@ class Product
     {
         return $this->updatedAt;
     }
-
 }
 

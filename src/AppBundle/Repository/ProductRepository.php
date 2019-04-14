@@ -26,7 +26,6 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
             ->where('pr.id = :productId')
             ->andWhere("pr.status <> :status OR pr.status IS NULL")
             ->setParameters(array('productId' => $id, 'status' => 'D'))
-            ->setMaxResults(1)
             ->getQuery()
             ->getResult();
     }

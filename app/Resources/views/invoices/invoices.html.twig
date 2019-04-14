@@ -52,7 +52,8 @@
                <form>
                   <div class="form-group">
                      <label for="contractorNameAdd">Wybierz kontrahenta</label>
-                     <select class="form-control" id="contractorNameAdd">
+                     <select class="form-control" id="contractorNameAdd" onblur="Invoices.contractorNameAddCheck()">
+                        <option disabled selected value> -- Wybierz kontrahenta -- </option>
                         {% for contractor in contractors %}
                            <option value="{{ contractor.id }}">{{ contractor.name }}</option>
                         {% endfor %}
@@ -60,12 +61,12 @@
                   </div>
                   <div class="form-group">
                      <label for="invoiceDueByDateAdd">Termin płatności</label>
-                     <input type="date" class="form-control" id="invoiceDueByDateAdd" placeholder="">
+                     <input type="date" class="form-control" id="invoiceDueByDateAdd" onblur="Invoices.invoiceDueByDateAddCheck()" placeholder="">
                   </div>
                   <div style="margin-bottom: 40px;"></div>
                   <div class="form-group">
                      <label for="invoiceProduct1Add">Dodaj produkt</label>
-                     <select class="form-control" id="invoiceProduct1Add">
+                     <select class="form-control" id="invoiceProduct1Add" onblur="Invoices.invoiceProduct1AddCheck()">
                         <option disabled selected value> -- Wybierz produkt -- </option>
                         {% for product in products %}
                            <option value="{{ product.id }}">{{ product.name }}</option>
@@ -74,12 +75,12 @@
                   </div>
                   <div class="form-group">
                      <label for="invoiceProductQuantity1Add">Liczba sztuk</label>
-                     <input type="number" class="form-control" id="invoiceProductQuantity1Add" placeholder="">
+                     <input type="number" class="form-control" id="invoiceProductQuantity1Add"  onblur="Invoices.quantity1check()" placeholder="">
                   </div>
                   <div style="margin-bottom: 30px;"></div>
                   <div class="form-group">
                      <label for="invoiceProduct2Add">Dodaj produkt</label>
-                     <select class="form-control" id="invoiceProduct2Add">
+                     <select class="form-control" id="invoiceProduct2Add" onblur="Invoices.product2validate()">
                         <option disabled selected value> -- Wybierz produkt -- </option>
                         {% for product in products %}
                            <option value="{{ product.id }}">{{ product.name }}</option>

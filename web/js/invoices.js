@@ -1,5 +1,7 @@
 var Invoices = {
 
+    error: [],
+
     getInvoice: function(id) {
         $.ajax({
             url: 'invoices/get/' + id,
@@ -110,6 +112,63 @@ var Invoices = {
                 window.location.reload();
             },
         });
+    },
+
+
+    contractorNameAddCheck:  function() {
+        if ($('#contractorNameAdd').val() != null) {
+            $('#contractorNameAdd').css('border-color', 'green');
+        } else {
+            $('#contractorNameAdd').css('border-color', 'red');
+        }
+    },
+
+
+    invoiceDueByDateAddCheck:  function() {
+        if ($('#invoiceDueByDateAdd').val() != '') {
+            $('#invoiceDueByDateAdd').css('border-color', 'green');
+        } else {
+            $('#invoiceDueByDateAdd').css('border-color', 'red');
+        }
+    },
+
+    invoiceProduct1AddCheck:  function() {
+        if ($('#invoiceProduct1Add').val() != null) {
+            $('#invoiceProduct1Add').css('border-color', 'green');
+        } else {
+            $('#invoiceProduct1Add').css('border-color', 'red');
+        }
+    },
+
+
+    quantity1check:  function() {
+        if ($('#invoiceProductQuantity1Add').val() != '') {
+            $('#invoiceProductQuantity1Add').css('border-color', 'green');
+        } else {
+            $('#invoiceProductQuantity1Add').css('border-color', 'red');
+        }
+    },
+
+    product2validate: function() {
+
+        if ($('#invoiceProduct2Add').val() != '' ||$('#invoiceProductQuantity2Add').val() != '') {
+
+            $( "#invoiceProduct2Add" ).blur(function() {
+                    if ($('#invoiceProduct2Add').val() != '') {
+                        $('#invoiceProduct2Add').css('border-color', 'green');
+                    } else {
+                        $('#invoiceProduct2Add').css('border-color', 'red');
+                    }
+            });
+
+            $( "#invoiceProductQuantity2Add" ).blur(function() {
+                if ($('#invoiceProductQuantity2Add').val() != '') {
+                    $('#invoiceProductQuantity2Add').css('border-color', 'green');
+                } else {
+                    $('#invoiceProductQuantity2Add').css('border-color', 'red');
+                }
+            })
+        }
     },
 };
 

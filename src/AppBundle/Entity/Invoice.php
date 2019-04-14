@@ -5,7 +5,6 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use AppBundle\Entity\ProductToInvoice;
 
 /**
  * Invoice
@@ -50,12 +49,12 @@ class Invoice
     private $dueByDate;
 
     /**
-     * @ORM\Column(type="decimal", precision=7, scale=2)
+     * @ORM\Column(type="decimal", precision=20, scale=2)
      */
     private $totalNet = 0;
 
     /**
-     * @ORM\Column(type="decimal", precision=7, scale=2)
+     * @ORM\Column(type="decimal", precision=20, scale=2)
      */
     private $totalGross = 0;
 

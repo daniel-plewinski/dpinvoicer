@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Invoice;
 use AppBundle\Entity\ProductToInvoice;
 use AppBundle\Service\InvoiceNumberGenerator;
+use AppBundle\Service\InvoiceTotalValueCalculate;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -112,9 +113,11 @@ class InvoicesController extends Controller
      * @Route("/invoices/new", name="newInvoice")
      * @Method("POST")
      */
-    public function newInvoice(Request $request, InvoiceNumberGenerator $invoiceNumberGenerator)
+    public function newInvoice(
+        Request $request,
+        InvoiceNumberGenerator $invoiceNumberGenerator,
+        InvoiceTotalValueCalculate $invoiceTotalValueCalculate)
     {
-
         $contractorId = $request->get('contractor');
         $invoiceDueByDate = $request->get('invoiceDueByDate');
 
@@ -161,9 +164,14 @@ class InvoicesController extends Controller
                 $product = $em->getRepository('AppBundle:Product')->find($addProduct['productId']);
                 $productToInvoice->setProduct($product);
                 $productToInvoice->setQuantity($addProduct['productQuantity']);
+
                 $em->persist($productToInvoice);
-                $em->flush();
             }
+
+            $em->flush();
+            $em->clear();
+
+            $invoiceTotalValueCalculate->calculateInvoiceTotalValue($invoiceId);
 
             return new JsonResponse([
                 'success' => true,

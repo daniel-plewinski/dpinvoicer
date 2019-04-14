@@ -29,7 +29,7 @@ class Product
     private $name;
 
     /**
-     * @ORM\Column(type="decimal", precision=7, scale=2)
+     * @ORM\Column(type="decimal", precision=25, scale=2)
      */
     private $netPrice = 0;
 

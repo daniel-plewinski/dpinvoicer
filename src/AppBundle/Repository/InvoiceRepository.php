@@ -33,4 +33,14 @@ class InvoiceRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findLastInvoiceId()
+    {
+        return $this->createQueryBuilder('i')
+            ->select('i.id')
+            ->setMaxResults( 1 )
+            ->orderBy('i.id', 'DESC')
+            ->getQuery()
+            ->getSingleResult();
+    }
 }

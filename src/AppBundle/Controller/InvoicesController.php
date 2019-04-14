@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Invoice;
 use AppBundle\Entity\ProductToInvoice;
+use AppBundle\Service\InvoiceNumberGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,8 +14,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 
+/**
+ * Class InvoicesController
+ * @package AppBundle\Controller
+ */
 class InvoicesController extends Controller
 {
+
+    public function __construct()
+    {
+
+    }
+
     /**
      * @Route("/", name="invoices")
      */
@@ -101,43 +112,78 @@ class InvoicesController extends Controller
      * @Route("/invoices/new", name="newInvoice")
      * @Method("POST")
      */
-    public function newInvoice(Request $request)
+    public function newInvoice(Request $request, InvoiceNumberGenerator $invoiceNumberGenerator)
     {
-//        $name = $request->get('name');
+
+        $contractorId = $request->get('contractor');
+        $invoiceDueByDate = $request->get('invoiceDueByDate');
 
         $em = $this->getDoctrine()->getManager();
 
-        $contractor = $em->getRepository('AppBundle:Contractor')->find(16);
+        $contractor = $em->getRepository('AppBundle:Contractor')->find($contractorId);
 
         $invoice = new Invoice();
         $invoice->setContractor($contractor);
-        $invoice->setNumber(3);
+        $invoice->setNumber($invoiceNumberGenerator->generateInvoiceNumber());
         $invoice->setIssueDate(new \DateTime('now'));
-        $invoice->setDueByDate(new \DateTime('2019-04-20'));
+        $invoice->setDueByDate(new \DateTime($invoiceDueByDate));
 
-        $em->persist($invoice);
-        $em->flush();
+        $addProducts = [];
+        $index = 0;
+        if ($request->get('invoiceProduct1') && $request->get('invoiceProductQuantity1')) {
+            $addProducts[$index]['productId'] = $request->get('invoiceProduct1');
+            $addProducts[$index]['productQuantity'] = $request->get('invoiceProductQuantity1');
+            $index++;
+        }
 
-        $invoiceId = $invoice->getId();
-        $lastInvoice = $em->getRepository('AppBundle:Invoice')->find($invoiceId);
+        if ($request->get('invoiceProduct2') && $request->get('invoiceProductQuantity2')) {
+            $addProducts[$index]['productId'] = $request->get('invoiceProduct2');
+            $addProducts[$index]['productQuantity'] = $request->get('invoiceProductQuantity2');
+        }
 
-        $productToInvoice = new ProductToInvoice();
 
-        $productToInvoice->setInvoice($lastInvoice);
+        if (empty($addProducts)) {
 
-        $product = $em->getRepository('AppBundle:Product')->find(2);
-        $productToInvoice->setProduct($product);
-        $productToInvoice->setQuantity(9);
+            return false;
+        }
 
-        $em->persist($productToInvoice);
-        $em->flush();
+        try {
 
-        return new Response('OK', 201);
+            $em->persist($invoice);
+            $em->flush();
+
+            $invoiceId = $invoice->getId();
+            $lastInvoice = $em->getRepository('AppBundle:Invoice')->find($invoiceId);
+
+            foreach ($addProducts as $addProduct) {
+                $productToInvoice = new ProductToInvoice();
+                $productToInvoice->setInvoice($lastInvoice);
+                $product = $em->getRepository('AppBundle:Product')->find($addProduct['productId']);
+                $productToInvoice->setProduct($product);
+                $productToInvoice->setQuantity($addProduct['productQuantity']);
+                $em->persist($productToInvoice);
+                $em->flush();
+            }
+
+            return new JsonResponse([
+                'success' => true,
+            ]);
+
+        } catch (Exception $exception) {
+
+            return new JsonResponse(
+                [
+                    'success' => false,
+                    'code' => $exception->getCode(),
+                    'message' => $exception->getMessage(),
+                ]
+            );
+        }
     }
 
     /**
      * @param $id
-     * @Route("/invoice/delete/{id}", name="deleteInvoice")
+     * @Route("/invoices/delete/{id}", name="deleteInvoice")
      * @Method("DELETE")
      * @return JsonResponse
      */
@@ -157,7 +203,14 @@ class InvoicesController extends Controller
 
                 $invoice->setStatus('D');
 
+                $productToInvoiceArr = $em->getRepository('AppBundle:ProductToInvoice')->findByInvoice($invoice);
+
+                foreach ($productToInvoiceArr as $productToInvoice) {
+                    $productToInvoice->setStatus('D');
+                }
+
                 $em->persist($invoice);
+                $em->persist($productToInvoice);
                 $em->flush();
 
                 return new JsonResponse([

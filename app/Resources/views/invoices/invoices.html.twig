@@ -51,46 +51,48 @@
                <div id="message"></div>
                <form>
                   <div class="form-group">
-                     <label for="invoiceName">Wybierz kontrahenta</label>
-                     <select class="form-control" id="invoiceName">
+                     <label for="contractorNameAdd">Wybierz kontrahenta</label>
+                     <select class="form-control" id="contractorNameAdd">
                         {% for contractor in contractors %}
                            <option value="{{ contractor.id }}">{{ contractor.name }}</option>
                         {% endfor %}
                      </select>
                   </div>
                   <div class="form-group">
-                     <label for="invoiceDueByDate">Termin płatności</label>
-                     <input type="date" class="form-control" id="invoiceDueByDate" placeholder="">
+                     <label for="invoiceDueByDateAdd">Termin płatności</label>
+                     <input type="date" class="form-control" id="invoiceDueByDateAdd" placeholder="">
                   </div>
                   <div style="margin-bottom: 40px;"></div>
                   <div class="form-group">
-                     <label for="invoiceAddress">Dodaj produkt</label>
-                     <select class="form-control" id="invoiceName">
+                     <label for="invoiceProduct1Add">Dodaj produkt</label>
+                     <select class="form-control" id="invoiceProduct1Add">
+                        <option disabled selected value> -- Wybierz produkt -- </option>
                         {% for product in products %}
                            <option value="{{ product.id }}">{{ product.name }}</option>
                         {% endfor %}
                      </select>
                   </div>
                   <div class="form-group">
-                     <label for="productQuantity1">Liczba sztuk</label>
-                     <input type="number" class="form-control" id="productQuantity1" placeholder="">
+                     <label for="invoiceProductQuantity1Add">Liczba sztuk</label>
+                     <input type="number" class="form-control" id="invoiceProductQuantity1Add" placeholder="">
                   </div>
                   <div style="margin-bottom: 30px;"></div>
                   <div class="form-group">
-                     <label for="invoiceAddress">Dodaj produkt</label>
-                     <select class="form-control" id="invoiceName">
+                     <label for="invoiceProduct2Add">Dodaj produkt</label>
+                     <select class="form-control" id="invoiceProduct2Add">
+                        <option disabled selected value> -- Wybierz produkt -- </option>
                         {% for product in products %}
                            <option value="{{ product.id }}">{{ product.name }}</option>
                         {% endfor %}
                      </select>
                   </div>
                   <div class="form-group">
-                     <label for="productQuantity2">Liczba sztuk</label>
-                     <input type="number" class="form-control" id="productQuantity2" placeholder="">
+                     <label for="invoiceProductQuantity2Add">Liczba sztuk</label>
+                     <input type="number" class="form-control" id="invoiceProductQuantity2Add" placeholder="">
                   </div>
                   <input type="hidden" class="form-control" id="invoiceId" value="">
                   <div class="modal-footer">
-                     <button type="button" id="submit" onclick="Invoices.submit()" class="btn btn-info">Zapisz</button>
+                     <button type="button" id="submit" onclick="Invoices.addInvoice()" class="btn btn-info">Zapisz</button>
                      <button type="button" id="close" class="btn btn-default" data-dismiss="modal">Zamknij</button>
                   </div>
                </form>

@@ -52,7 +52,7 @@ var Invoices = {
     deleteInvoice: function(id) {
 
         $.ajax({
-            url: 'delete/' + id,
+            url: 'invoices/delete/' + id,
             type: 'DELETE',
             error: function () {
                 $('#mainMessage').append(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -79,16 +79,21 @@ var Invoices = {
     addInvoice:  function() {
 
         var formData = {
-            'name': $('#invoiceName').val(),
+            'contractor': $('#contractorNameAdd').val(),
+            'invoiceDueByDate': $('#invoiceDueByDateAdd').val(),
+            'invoiceProduct1': $('#invoiceProduct1Add').val(),
+            'invoiceProductQuantity1': $('#invoiceProductQuantity1Add').val(),
+            'invoiceProduct2': $('#invoiceProduct2Add').val(),
+            'invoiceProductQuantity2': $('#invoiceProductQuantity2Add').val(),
         };
 
         $.ajax({
-            url: 'new',
+            url: 'invoices/new',
             data: formData,
             type: 'POST',
             error: function () {
                 $('#message').append(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                  <strong>Błąd!</strong> Nie udało się dodać kontrahenta
+                  <strong>Błąd!</strong> Nie udało się dodać faktury
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>
@@ -97,7 +102,7 @@ var Invoices = {
             success: function () {
 
                 $('#message').append(`<div class="alert alert-success alert-dismissible fade show" role="alert">
-                  <strong>Sukces!</strong> Kontrahent został dodany
+                  <strong>Sukces!</strong> Faktura została dodana
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>

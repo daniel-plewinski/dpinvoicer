@@ -1,4 +1,4 @@
-dpINVOICE - application for making out invoices
+dpINVOICER - application for making out invoices
 ========================
 
 **INFO**: This is a Symfony 3.4 application with a MySQL database

@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Invoice
@@ -35,6 +36,7 @@ class Invoice
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contractor")
      * @ORM\JoinColumn(name="contractor", referencedColumnName="id")
+     * @Assert\NotBlank(message="Wybierz kontrahenta.")
      */
     private $contractor;
 
@@ -45,6 +47,7 @@ class Invoice
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(message="Pole data jest obowiązkowe.")
      */
     private $dueByDate;
 

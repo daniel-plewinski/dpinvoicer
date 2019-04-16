@@ -55,10 +55,10 @@ var Contractors = {
             url: 'update/' + id,
             data: formData,
             type: 'PATCH',
-            error: function () {
+            error: function (xhr, status, error) {
                 $('#message').append(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                  <strong>Błąd!</strong> Nie udało się zmienić danych kontrahenta
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <strong>Błąd!</strong>` +  ' ' + xhr.responseText +
+                    `<button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>
                   </div>`);
@@ -116,10 +116,10 @@ var Contractors = {
             url: 'new',
             data: formData,
             type: 'POST',
-            error: function () {
+            error: function (xhr, status, error) {
                 $('#message').append(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                  <strong>Błąd!</strong> Nie udało się dodać kontrahenta
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <strong>Błąd!</strong>` +  ' ' + xhr.responseText +
+                    `<button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>
                   </div>`);
@@ -142,6 +142,6 @@ $("#submit").click(function(event) {
     event.preventDefault()
 });
 
-$("#close").click(function(event) {
+$("#close").click(function() {
     window.location.reload();
 });

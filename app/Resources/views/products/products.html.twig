@@ -31,18 +31,15 @@
 
  {% endfor %}
     </div>
-    {# display navigation #}
     <div class="navigation">
         <div class="text-center">
             {{ knp_pagination_render(pagination) }}
         </div>
     </div>
 
-    <!-- Modal for contractor editing -->
     <div class="modal fade" id="editProduct" role="dialog">
         <div class="modal-dialog">
 
-            <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title"></h4>
@@ -61,9 +58,11 @@
                          <div class="form-group">
                             <label for="productVatPerCent">Procent VAT</label>
                             <select class="form-control" id="productVatPerCent">
+                            <option disabled selected value> -- Wybierz stawkę VAT -- </option>
                               <option value="23">23%</option>
                               <option value="8">8%</option>
                               <option value="4">4%</option>
+                              <option value="0">0%</option>
                               <option value="zw">zwolniony</option>
                             </select>
                         </div>

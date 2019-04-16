@@ -116,10 +116,10 @@ var Products = {
             url: 'new',
             data: formData,
             type: 'POST',
-            error: function () {
+            error: function (xhr, status, error) {
                 $('#message').append(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                  <strong>Błąd!</strong> Nie udało się dodać produktu lub usługi
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <strong>Błąd!</strong>` +  ' ' + xhr.responseText +
+                  `<button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>
                   </div>`);
@@ -142,6 +142,6 @@ $("#submit").click(function(event) {
     event.preventDefault()
 });
 
-$("#close").click(function(event) {
+$("#close").click(function() {
     window.location.reload();
 });

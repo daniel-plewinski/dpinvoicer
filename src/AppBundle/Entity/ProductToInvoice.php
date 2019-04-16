@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * ProductToInvoice
@@ -36,12 +37,14 @@ class ProductToInvoice
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product")
      * @ORM\JoinColumn(name="product", referencedColumnName="id")
+     *
      */
     private $product;
 
     /**
      * @var integer
      * @ORM\Column(type="bigint")
+     * @Assert\NotBlank(message="Pole ilość jest obowiązkowe.")
      */
     private $quantity;
 

@@ -54,5 +54,4 @@ class InvoiceTotalValueCalculate
             $this->em->flush();
         }
     }
-
 }

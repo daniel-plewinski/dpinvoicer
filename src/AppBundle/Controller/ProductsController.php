@@ -90,6 +90,20 @@ class ProductsController extends Controller
         $product->setNetPrice($netPrice);
         $product->setVatPerCent($vatPerCent);
 
+
+        $validator = $this->get('validator');
+        $errors = $validator->validate($product);
+
+        if (count($errors) > 0) {
+
+            $errMessage = '';
+            foreach ($errors as $error) {
+                $errMessage .= $error->getMessage() . ' ';
+            }
+
+            return new Response($errMessage, 500);
+        }
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($product);
         $em->flush();

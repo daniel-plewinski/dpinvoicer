@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as ContractorAssert;
 
 /**
  * Contractor
@@ -25,18 +27,24 @@ class Contractor
     /**
      * @var string
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Pole nazwa nie może być puste.")
+     * @Assert\Regex("/^[a-zA-Z\d-]+$/", message="Nazwa może zawierać tylko litery, cyfry oraz myślnik.")
      */
     private $name;
 
     /**
      * @var integer
      * @ORM\Column(type="bigint")
+     * @Assert\NotBlank(message="Pole nip nie może być puste.")
+     * @ContractorAssert\IsNip()
      */
     private $nip;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=500)
+     * @Assert\NotBlank(message="Pole adres nie może być puste.")
+     * @Assert\Regex("/^[a-zA-Z\.\/\d-]+$/", message="Adres zawiera niedozwolony znak.")
      */
     private $address;
 
@@ -148,6 +156,5 @@ class Contractor
     {
         return $this->updatedAt;
     }
-
 }
 

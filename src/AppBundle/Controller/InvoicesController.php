@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\ConstraintViolation;
 
 
 /**
@@ -21,12 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class InvoicesController extends Controller
 {
-
-    public function __construct()
-    {
-
-    }
-
     /**
      * @Route("/", name="invoices")
      */
@@ -129,34 +124,68 @@ class InvoicesController extends Controller
         $invoice->setContractor($contractor);
         $invoice->setNumber($invoiceNumberGenerator->generateInvoiceNumber());
         $invoice->setIssueDate(new \DateTime('now'));
-        $invoice->setDueByDate(new \DateTime($invoiceDueByDate));
 
-        $addProducts = [];
-        $index = 0;
-        if ($request->get('invoiceProduct1') && $request->get('invoiceProductQuantity1')) {
-            $addProducts[$index]['productId'] = $request->get('invoiceProduct1');
-            $addProducts[$index]['productQuantity'] = $request->get('invoiceProductQuantity1');
-            $index++;
+        if ($invoiceDueByDate) {
+            $invoice->setDueByDate(new \DateTime($invoiceDueByDate));
+        } else {
+            $invoice->setDueByDate(null);
         }
 
-        if ($request->get('invoiceProduct2') && $request->get('invoiceProductQuantity2')) {
-            $addProducts[$index]['productId'] = $request->get('invoiceProduct2');
-            $addProducts[$index]['productQuantity'] = $request->get('invoiceProductQuantity2');
+        $validator = $this->get('validator');
+        $errors = $validator->validate($invoice);
+
+        if ($request->get('invoiceProduct1') == '') {
+            $error = new ConstraintViolation('Musisz wybrać produkt lub usługę.',
+                '', [], $invoice, 'fieldName', 'product');
+            $errors->add($error);
         }
 
-
-        if (empty($addProducts)) {
-
-            return false;
+        if ($request->get('invoiceProductQuantity1') == '') {
+            $error = new ConstraintViolation('Musisz wpisać liczbę sztuk.',
+                '', [], $invoice, 'fieldName', 'product');
+            $errors->add($error);
         }
+
+        if ($request->get('invoiceProduct2')) {
+            if ($request->get('invoiceProductQuantity2') == '') {
+                $error = new ConstraintViolation('Musisz wpisać liczbę sztuk.',
+                    '', [], $invoice, 'fieldName', 'product');
+                $errors->add($error);
+            }
+        }
+
+        if (count($errors) > 0) {
+            $errMessage = '';
+            foreach ($errors as $error) {
+                $errMessage .= $error->getMessage() . ' ';
+            }
+
+            return new Response($errMessage, 500);
+        }
+
+        $em->persist($invoice);
+        $em->flush();
 
         try {
 
-            $em->persist($invoice);
-            $em->flush();
-
             $invoiceId = $invoice->getId();
             $lastInvoice = $em->getRepository('AppBundle:Invoice')->find($invoiceId);
+            $addProducts = [];
+            $index = 0;
+
+            if ($request->get('invoiceProduct1') && $request->get('invoiceProductQuantity1')) {
+                $addProducts[$index]['productId'] = $request->get('invoiceProduct1');
+                $addProducts[$index]['productQuantity'] = $request->get('invoiceProductQuantity1');
+                $index++;
+            }
+
+            if ($request->get('invoiceProduct2') && $request->get('invoiceProductQuantity2')) {
+                $addProducts[$index]['productId'] = $request->get('invoiceProduct2');
+                $addProducts[$index]['productQuantity'] = $request->get('invoiceProductQuantity2');
+            }
+
+            $validator = $this->get('validator');
+
 
             foreach ($addProducts as $addProduct) {
                 $productToInvoice = new ProductToInvoice();
@@ -164,6 +193,9 @@ class InvoicesController extends Controller
                 $product = $em->getRepository('AppBundle:Product')->find($addProduct['productId']);
                 $productToInvoice->setProduct($product);
                 $productToInvoice->setQuantity($addProduct['productQuantity']);
+
+
+                $errors .= $validator->validate($productToInvoice);
 
                 $em->persist($productToInvoice);
             }

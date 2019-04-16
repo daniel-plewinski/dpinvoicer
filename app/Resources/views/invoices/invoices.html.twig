@@ -31,18 +31,15 @@
 
    {% endfor %}
 </div>
-{# display navigation #}
 <div class="navigation">
    <div class="text-center">
       {{ knp_pagination_render(pagination) }}
    </div>
 </div>
 
-   <!-- Modal for invoice adding -->
    <div class="modal fade" id="newInvoice" role="dialog">
       <div class="modal-dialog widerModal">
 
-         <!-- Modal content-->
          <div class="modal-content">
             <div class="modal-header">
                <h4 class="modal-title">Nowa faktura</h4>
@@ -102,11 +99,9 @@
       </div>
    </div>
 
-   <!-- Modal for invoice detail -->
    <div class="modal fade" id="showInvoice" role="dialog">
       <div class="modal-dialog widerModal">
 
-         <!-- Modal content-->
          <div class="modal-content">
             <div class="modal-header">
                <h4 class="modal-title">Szczegóły faktury nr <span id="numberShow"></span></h4>

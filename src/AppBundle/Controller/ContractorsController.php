@@ -90,6 +90,18 @@ class ContractorsController extends Controller
         $contractor->setNip($nip);
         $contractor->setAddress($address);
 
+        $validator = $this->get('validator');
+        $errors = $validator->validate($contractor);
+
+        if (count($errors) > 0) {
+            $errMessage = '';
+            foreach ($errors as $error) {
+                $errMessage .= $error->getMessage() . ' ';
+            }
+
+            return new Response($errMessage, 500);
+        }
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($contractor);
         $em->flush();
@@ -130,6 +142,18 @@ class ContractorsController extends Controller
 
                 if ($address) {
                     $contractor->setAddress($address);
+                }
+
+                $validator = $this->get('validator');
+                $errors = $validator->validate($contractor);
+
+                if (count($errors) > 0) {
+                    $errMessage = '';
+                    foreach ($errors as $error) {
+                        $errMessage .= $error->getMessage() . ' ';
+                    }
+
+                    return new Response($errMessage, 500);
                 }
 
                 $em->persist($contractor);

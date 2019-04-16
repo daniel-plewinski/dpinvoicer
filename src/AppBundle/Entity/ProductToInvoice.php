@@ -5,15 +5,14 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints as ContractorAssert;
 
 /**
- * Contractor
+ * ProductToInvoice
  *
- * @ORM\Table(name="contractor")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ContractorRepository")
+ * @ORM\Table(name="product_to_invoice")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\productToInvoiceRepository")
  */
-class Contractor
+class ProductToInvoice
 {
     /**
      * @var int
@@ -25,35 +24,35 @@ class Contractor
     private $id;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=100)
-     * @Assert\NotBlank(message="Pole nazwa nie może być puste.")
-     * @Assert\Regex("/^[a-zA-Z\d-]+$/", message="Nazwa może zawierać tylko litery, cyfry oraz myślnik.")
+     * @var Invoice
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Invoice", inversedBy="productToInvoice")
+     * @ORM\JoinColumn(name="invoice", referencedColumnName="id")
+     *
      */
-    private $name;
+    private $invoice;
+
+    /**
+     * @var Product
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product")
+     * @ORM\JoinColumn(name="product", referencedColumnName="id")
+     *
+     */
+    private $product;
 
     /**
      * @var integer
      * @ORM\Column(type="bigint")
-     * @Assert\NotBlank(message="Pole nip nie może być puste.")
-     * @ContractorAssert\IsNip()
+     * @Assert\NotBlank(message="Pole ilość jest obowiązkowe.")
      */
-    private $nip;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=500)
-     * @Assert\NotBlank(message="Pole adres nie może być puste.")
-     * @Assert\Regex("/^[a-zA-Z\.\/\d-]+$/", message="Adres zawiera niedozwolony znak.")
-     */
-    private $address;
+    private $quantity;
 
     /**
      * @var string
      * @ORM\Column(name="status__", type="string", length=1, nullable=true)
      */
     private $status;
-
 
     /**
      * @Gedmo\Timestampable(on="create")
@@ -78,51 +77,51 @@ class Contractor
     }
 
     /**
-     * @return string
+     * @return Invoice
      */
-    public function getName()
+    public function getInvoice()
     {
-        return $this->name;
+        return $this->invoice;
     }
 
     /**
-     * @param string $name
+     * @param Invoice $invoice
      */
-    public function setName($name)
+    public function setInvoice($invoice)
     {
-        $this->name = $name;
+        $this->invoice = $invoice;
+    }
+
+    /**
+     * @return Product
+     */
+    public function getProduct()
+    {
+        return $this->product;
+    }
+
+    /**
+     * @param Product $product
+     */
+    public function setProduct($product)
+    {
+        $this->product = $product;
     }
 
     /**
      * @return int
      */
-    public function getNip()
+    public function getQuantity()
     {
-        return $this->nip;
+        return $this->quantity;
     }
 
     /**
-     * @param int $nip
+     * @param int $quantity
      */
-    public function setNip($nip)
+    public function setQuantity($quantity)
     {
-        $this->nip = $nip;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * @param string $address
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
+        $this->quantity = $quantity;
     }
 
     /**

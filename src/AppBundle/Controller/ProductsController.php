@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Contractor;
+use AppBundle\Entity\Product;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -12,51 +12,51 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class ContractorsController extends Controller
+class ProductsController extends Controller
 {
     /**
-     * @Route("/contractors/", name="contractors")
+     * @Route("/products/", name="products")
      */
     public function index(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $contractors = $em->getRepository('AppBundle:Contractor')->findAllContractors();
+        $products = $em->getRepository('AppBundle:Product')->findAllProducts();
 
         $paginator = $this->get('knp_paginator');
 
         $pagination = $paginator->paginate(
-            $contractors, /* query NOT result */
+            $products, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             10/*limit per page*/
         );
 
-        return $this->render("contractors/contractors.html.twig", ['pagination' => $pagination]);
+        return $this->render("products/products.html.twig", ['pagination' => $pagination]);
     }
 
 
     /**
-     * @Route("/contractors/get/{id}", name="getContractor")
+     * @Route("/products/get/{id}", name="getProduct")
      * @Method("GET")
      */
-    public function getContractor($id)
+    public function getProduct($id)
     {
         $em = $this->getDoctrine()->getManager();
 
         try {
 
-            $contractor = $em->getRepository('AppBundle:Contractor')->findOneContractor($id)[0];
+            $product = $em->getRepository('AppBundle:Product')->findOneProduct($id)[0];
 
-            if (!$contractor) {
+            if (!$product) {
 
                 $data = ['No results found' => null];
 
             } else {
 
                 $data = [
-                    'id' => $contractor->getId(),
-                    'name' => $contractor->getName(),
-                    'nip' => $contractor->getNip(),
-                    'address' => $contractor->getAddress()
+                    'id' => $product->getId(),
+                    'name' => $product->getName(),
+                    'netPrice' => $product->getNetPrice(),
+                    'vatPerCent' => $product->getVatPerCent()
                 ];
             }
 
@@ -76,24 +76,26 @@ class ContractorsController extends Controller
     }
 
     /**
-     * @Route("/contractors/new", name="newContractor")
+     * @Route("/products/new", name="newProduct")
      * @Method("POST")
      */
-    public function newContractor(Request $request)
+    public function newProduct(Request $request)
     {
         $name = $request->get('name');
-        $nip = $request->get('nip');
-        $address = $request->get('address');
+        $netPrice = $request->get('netPrice');
+        $vatPerCent = $request->get('vatPerCent');
 
-        $contractor = new Contractor();
-        $contractor->setName($name);
-        $contractor->setNip($nip);
-        $contractor->setAddress($address);
+        $product = new Product();
+        $product->setName($name);
+        $product->setNetPrice($netPrice);
+        $product->setVatPerCent($vatPerCent);
+
 
         $validator = $this->get('validator');
-        $errors = $validator->validate($contractor);
+        $errors = $validator->validate($product);
 
         if (count($errors) > 0) {
+
             $errMessage = '';
             foreach ($errors as $error) {
                 $errMessage .= $error->getMessage() . ' ';
@@ -103,7 +105,7 @@ class ContractorsController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $em->persist($contractor);
+        $em->persist($product);
         $em->flush();
 
         return new Response('OK', 201);
@@ -111,52 +113,40 @@ class ContractorsController extends Controller
 
 
     /**
-     * @Route("/contractors/update/{id}", name="updateContractor")
+     * @Route("/products/update/{id}", name="updateProduct")
      * @Method("PATCH")
      */
-    public function updateContractor(Request $request, $id)
+    public function updateProduct(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
         try {
 
-            $contractor = $em->getRepository('AppBundle:Contractor')->find($id);
+            $product = $em->getRepository('AppBundle:Product')->find($id);
 
-            if (!$contractor) {
+            if (!$product) {
 
                 return new JsonResponse([ 'success' => false,]);
 
             } else {
 
                 $name = $request->get('name');
-                $nip = $request->get('nip');
-                $address = $request->get('address');
+                $netPrice = $request->get('netPrice');
+                $vatPerCent = $request->get('vatPerCent');
 
                 if ($name) {
-                    $contractor->setName($name);
+                    $product->setName($name);
                 }
 
-                if ($nip) {
-                    $contractor->setNip($nip);
+                if ($netPrice) {
+                    $product->setNetPrice($netPrice);
                 }
 
-                if ($address) {
-                    $contractor->setAddress($address);
+                if ($vatPerCent) {
+                    $product->setVatPerCent($vatPerCent);
                 }
 
-                $validator = $this->get('validator');
-                $errors = $validator->validate($contractor);
-
-                if (count($errors) > 0) {
-                    $errMessage = '';
-                    foreach ($errors as $error) {
-                        $errMessage .= $error->getMessage() . ' ';
-                    }
-
-                    return new Response($errMessage, 500);
-                }
-
-                $em->persist($contractor);
+                $em->persist($product);
                 $em->flush();
             }
 
@@ -176,27 +166,27 @@ class ContractorsController extends Controller
 
     /**
      * @param $id
-     * @Route("/contractors/delete/{id}", name="deleteContractor")
+     * @Route("/products/delete/{id}", name="deleteProduct")
      * @Method("DELETE")
      * @return JsonResponse
      */
-    public function deleteContractor($id)
+    public function deleteProduct($id)
     {
         $em = $this->getDoctrine()->getManager();
 
         try {
 
-            $contractor = $em->getRepository('AppBundle:Contractor')->find($id);
+            $product = $em->getRepository('AppBundle:Product')->find($id);
 
-            if (!$contractor) {
+            if (!$product) {
 
                 return new JsonResponse([ 'success' => false,]);
 
             } else {
 
-                 $contractor->setStatus('D');
+                $product->setStatus('D');
 
-                $em->persist($contractor);
+                $em->persist($product);
                 $em->flush();
 
                 return new JsonResponse([

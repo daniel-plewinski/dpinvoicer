@@ -1,17 +1,17 @@
-var Contractors = {
+var Products = {
 
     setModalTitle: function (mode) {
 
-        if (mode === 'addContractor') {
-            $('.modal-title').text('Dodaj kontrahenta');
+        if (mode === 'addProduct') {
+            $('.modal-title').text('Dodaj produkt lub usługę');
         }
 
-        if (mode === 'editContractor') {
-            $('.modal-title').text('Edytuj kontrahenta')
+        if (mode === 'editProduct') {
+            $('.modal-title').text('Edytuj produkt')
         }
     },
 
-    getContractor: function(id) {
+    getProduct: function(id) {
         $.ajax({
             url: 'get/' + id,
             data: {
@@ -22,43 +22,43 @@ var Contractors = {
                 console.log('error');
             },
             success: function(data) {
-                $('#contractorName').attr("value", data.data.name);
-                $('#contractorNip').attr("value", data.data.nip);
-                $('#contractorAddress').attr("value", data.data.address);
-                $('#contractorId').attr("value", data.data.id);
+                $('#productName').attr("value", data.data.name);
+                $('#productNetPrice').attr("value", data.data.netPrice);
+                $('#productVatPerCent').attr("value", data.data.vatPerCent);
+                $('#productId').attr("value", data.data.id);
             },
         });
     },
 
     submit() {
 
-        id = $('#contractorId').val();
+        id = $('#productId').val();
 
         if (id === "") {
-            this.addContractor()
+            this.addProduct()
         } else {
             id = parseInt(id);
-            this.updateContractor(id)
+            this.updateProduct(id)
         }
     },
 
-    updateContractor: function(id) {
+    updateProduct: function(id) {
 
         var formData = {
             'id': id,
-            'name': $('#contractorName').val(),
-            'nip': $('#contractorNip').val(),
-            'address': $('#contractorAddress').val(),
+            'name': $('#productName').val(),
+            'netPrice': $('#productNetPrice').val(),
+            'vatPerCent': $('#productVatPerCent').val(),
         };
 
         $.ajax({
             url: 'update/' + id,
             data: formData,
             type: 'PATCH',
-            error: function (xhr, status, error) {
+            error: function () {
                 $('#message').append(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                  <strong>Błąd!</strong>` +  ' ' + xhr.responseText +
-                    `<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <strong>Błąd!</strong> Nie udało się zmienić danych produktu lub usługi
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>
                   </div>`);
@@ -66,7 +66,7 @@ var Contractors = {
             success: function () {
 
                 $('#message').append(`<div class="alert alert-success alert-dismissible fade show" role="alert">
-                  <strong>Sukces!</strong> Kontrahent został zaktualizowany
+                  <strong>Sukces!</strong> Produkt lub usługa została zaktualizowana
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>
@@ -77,14 +77,14 @@ var Contractors = {
         });
     },
 
-    deleteContractor: function(id) {
+    deleteProduct: function(id) {
 
         $.ajax({
             url: 'delete/' + id,
             type: 'DELETE',
             error: function () {
                 $('#mainMessage').append(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                  <strong>Błąd!</strong> Nie udało się usunąć kontrahenta
+                  <strong>Błąd!</strong> Nie udało się usunąć produktu lub usługi
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>
@@ -93,7 +93,7 @@ var Contractors = {
             success: function () {
 
                 $('#mainMessage').append(`<div class="alert alert-success alert-dismissible fade show" role="alert">
-                  <strong>Sukces!</strong> Kontrahent został usunięty
+                  <strong>Sukces!</strong> Produkt lub usług została usunięta
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>
@@ -104,12 +104,12 @@ var Contractors = {
         });
     },
 
-    addContractor:  function() {
+    addProduct:  function() {
 
         var formData = {
-            'name': $('#contractorName').val(),
-            'nip': $('#contractorNip').val(),
-            'address': $('#contractorAddress').val(),
+            'name': $('#productName').val(),
+            'netPrice': $('#productNetPrice').val(),
+            'vatPerCent': $('#productVatPerCent').val(),
         };
 
         $.ajax({
@@ -119,7 +119,7 @@ var Contractors = {
             error: function (xhr, status, error) {
                 $('#message').append(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
                   <strong>Błąd!</strong>` +  ' ' + xhr.responseText +
-                    `<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  `<button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>
                   </div>`);
@@ -127,7 +127,7 @@ var Contractors = {
             success: function () {
 
                 $('#message').append(`<div class="alert alert-success alert-dismissible fade show" role="alert">
-                  <strong>Sukces!</strong> Kontrahent został dodany
+                  <strong>Sukces!</strong> Produkt lub usługa została usunięta
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>

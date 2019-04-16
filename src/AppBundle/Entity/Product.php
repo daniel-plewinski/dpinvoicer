@@ -5,15 +5,14 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints as ContractorAssert;
 
 /**
- * Contractor
+ * Product
  *
- * @ORM\Table(name="contractor")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ContractorRepository")
+ * @ORM\Table(name="product")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ProductRepository")
  */
-class Contractor
+class Product
 {
     /**
      * @var int
@@ -33,20 +32,23 @@ class Contractor
     private $name;
 
     /**
-     * @var integer
-     * @ORM\Column(type="bigint")
-     * @Assert\NotBlank(message="Pole nip nie może być puste.")
-     * @ContractorAssert\IsNip()
+     * @ORM\Column(type="decimal", precision=25, scale=2)
+     * @Assert\NotBlank(message="Pole cena netto nie może być puste.")
+     * @Assert\Range(
+     *      min = 0.01,
+     *      max = 99999999,
+     *      minMessage = "Cena netto nie może być mniejsza niż {{ limit }}.",
+     *      maxMessage = "Cena netto nie może być większa niż niż {{ limit }}.",
+     * )
      */
-    private $nip;
+    private $netPrice = 0;
+
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=500)
-     * @Assert\NotBlank(message="Pole adres nie może być puste.")
-     * @Assert\Regex("/^[a-zA-Z\.\/\d-]+$/", message="Adres zawiera niedozwolony znak.")
+     * @ORM\Column(type="text", length=2)
+     * @Assert\NotBlank(message="Wybierz stawkę podatku VAT.")
      */
-    private $address;
+    private $vatPerCent;
 
     /**
      * @var string
@@ -66,6 +68,8 @@ class Contractor
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;
+
+
 
     /**
      * Get id
@@ -94,35 +98,35 @@ class Contractor
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getNip()
+    public function getNetPrice()
     {
-        return $this->nip;
+        return $this->netPrice;
     }
 
     /**
-     * @param int $nip
+     * @param mixed $netPrice
      */
-    public function setNip($nip)
+    public function setNetPrice($netPrice)
     {
-        $this->nip = $nip;
+        $this->netPrice = $netPrice;
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getAddress()
+    public function getVatPerCent()
     {
-        return $this->address;
+        return $this->vatPerCent;
     }
 
     /**
-     * @param string $address
+     * @param mixed $vatPerCent
      */
-    public function setAddress($address)
+    public function setVatPerCent($vatPerCent)
     {
-        $this->address = $address;
+        $this->vatPerCent = $vatPerCent;
     }
 
     /**
@@ -157,4 +161,3 @@ class Contractor
         return $this->updatedAt;
     }
 }
-

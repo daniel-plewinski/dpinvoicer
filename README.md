@@ -11,15 +11,18 @@ What features are included?
   * Product Registry,
 
   * Invoice registry,
+  
+  * Contractor NIP (Polish VAT number) validation,
+  
+  * Basic input validation
 
   * CRUD functionalities are served by REST API except for invoice list which is rendered from PHP,
   
   * The frontend features Bootstrap 4 and jQuery,
   
-  * The Model is handled by Doctrine and the view uses Twig templating 
+  * The Model is handled by the Doctrine ORM system and the view uses Twig templating 
   
-
-Installation for development
+Installation
 -----------------------------
 * Run "composer install" to install dependencies,
 * Create an empty MySQL database,
